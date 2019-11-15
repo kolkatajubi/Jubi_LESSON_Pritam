@@ -1,0 +1,22 @@
+$bgcolour: green; //this is a Variable
+$font-color: black;
+
+$font-weight: (
+  "regular": 500,
+  "bold": 1000,
+  "light": 200
+);
+body {
+  background: $bgcolour;
+  font-weight: map-get($font-weight, light);
+  color: $font-color;
+}
+.main {
+  width: 80%;
+  margin: 0 auto;
+
+  .paragraph {
+    // & -> ".main"------------> #{&}.paragraph
+    font-weight: map-get($font-weight, bold);
+  }
+}

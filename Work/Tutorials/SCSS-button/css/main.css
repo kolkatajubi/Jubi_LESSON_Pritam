@@ -1,0 +1,19 @@
+.fill-button {
+  background-color: #2d53af;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+body {
+  background: white;
+  color: green;
+  height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1;
+}
+/*# sourceMappingURL=main.css.map */

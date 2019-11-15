@@ -1,0 +1,167 @@
+$(document).ready(function (){
+
+	$(".post-info:visible").each(function( index, element ) {
+			socialMediaCount(element);
+	});
+	
+	function socialMediaCount(element){
+		var	pageurl = window.location.protocol + "//" + window.location.host + $(element).find("a.permalink").attr("href");
+		var fbprocessed = $(element).find(".fbcount").attr("processed");
+		if (fbprocessed !== "true") {
+			$.ajax({
+				url :"https://api.facebook.com/method/links.getStats?format=json&urls=" + pageurl,
+				dataType: "json",
+				success : function (data) {
+					var url;
+					var share_count;
+					for (var x = 0; x < data.length; x++) {
+						share_count = data[x].share_count;
+						url = data[x].url;
+					}
+					var id = url.substr(url.indexOf("=") + 1)
+						$(".blog-social .fbcount").each(function (index,element)
+								{
+								if($(element).hasClass(id))
+								{$(element).html(share_count);
+								$(".fbcount ." + id).attr("processed","true");
+								}
+								});
+				},
+				error : function (jqXHR, statusText, errorThrown){
+					consoleLog(errorThrown);
+				}			
+			});
+		}
+		
+		var twprocessed = $(element).find(".twcount").attr("processed");
+		if (twprocessed !== "true") {
+			$.ajax({
+				url :"https://urls.api.twitter.com/1/urls/count.json?url=" + pageurl + '&callback=?',
+				crossDomain: true,
+				dataType: "json",
+				success : function (data) {
+					var url=data.url
+					var twit_count=data.count;	
+					var id = url.substr(url.indexOf("=") + 1)
+					$(".blog-social .twcount").each(function (index,element)
+								{
+								if($(element).hasClass(id)){
+								$(element).html(twit_count);
+								$(".twcount  ." + id).attr("processed","true");}
+								});
+				},
+				error : function (jqXHR, statusText, errorThrown){
+					consoleLog(errorThrown);
+				}			
+			});
+		}
+	}
+	
+	
+	/** Archive Accordian : start **/ 	
+	
+	/** for desktop : start **/
+	if ($("#accordion > ul > li > div").length > 0){
+	
+		$("#accordion > ul > li > div").click(function() {
+			$("#accordion > ul > li > ul").slideUp();
+			$(this).next("ul").slideToggle("slow");
+		});
+	}
+	
+	/**Archive open year & month **/
+		var url = window.location.pathname+location.search
+		$("#accordion > ul > li > ul > li > a").each(function(){
+			var myHref = $(this).attr("href");
+			if(url == myHref){
+			$(this).parents().slideDown();
+			$(this).addClass("active");
+			}
+	});
+	/** for desktop : End **/
+	
+	
+	/** for mobile : start **/
+	if ($("#accordion1 > ul > li > div").length > 0){
+	
+		$("#accordion1 > ul > li > div").click(function() {
+			$("#accordion1 > ul > li > ul").slideUp();
+			$(this).next("ul").slideToggle("slow");
+		});
+	}
+	
+	/**Archive open year & month **/
+		var url = window.location.pathname+location.search
+		$("#accordion1 > ul > li > ul > li > a").each(function(){
+			var myHref = $(this).attr("href");
+			if(url == myHref){
+			$(this).parents().slideDown();
+			$(this).addClass("active");
+			}
+	});
+	/** for mobile : end **/
+	
+	/** Archive Accordian : End **/ 
+  
+  /** remove header, footer etc & forward urlparameters to destination url: start **/
+		
+          
+		  var chkParam = getUrlParameter("channel");
+          if (chkParam != '' && chkParam == 'imobile') {
+            // for desktop
+            $(".nav-header, .updated-secondNav, .breadCrumbsContainer, .BigBanner, .fourNavContainer, footer, .offer-detail-back").remove();
+            $(".third-level-nav-container-nav").attr('class','third-level-nav-container-nav');
+
+            // for mobile
+            if($(document).width() < 980){
+              $("header, .LeftPanel").remove();
+              $("body").removeClass("open-right");
+              $(".container").css("padding-top","0");
+            }
+		
+			// $("body a").click(function(){ // forward urlparameters to destination url
+				// var achorLnk = $(this).attr("href");
+				// $(this).attr("href",achorLnk+'channel=imobile');
+			// });	
+			
+			// New code to pass URL parameter
+			// function passParam(){
+					// $("a").click(function(){
+					// var urlPara = window.location.search
+					// var achorLnk = $(this).attr("href");
+					// $(this).attr("href",achorLnk+urlPara);
+				// });	
+			// }
+			
+			// passParam();
+			
+			function passParam(){
+				$("body a").click(function(){
+						var urlPara = window.location.search.substr(1);
+						var achorLnk = $(this).attr("href");
+						$(this).attr("href",achorLnk+urlPara);
+			  });
+			}
+			
+			//setTimeout(passParam,2000);
+
+			$("#blog-list").one('DOMSubtreeModified',function() {
+				passParam(); // for load more blogs
+			});
+			
+			passParam(); // for all links
+			
+			// $(".related-posts a").click(function(){
+				// alert("similar artical");
+				// passParam(); //for Similar Articles
+			// });
+			
+			
+		  
+		  }
+
+     /** remove header, footer etc & forward urlparameters to destination url: end **/
+	
+	
+	
+});
